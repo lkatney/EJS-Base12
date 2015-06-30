@@ -11,19 +11,17 @@ async = require('async');
 // Require our base libs
 
 var config      = require('./lib/config-load')();
-var inject      = require('./lib/inject');
+// var inject      = require('./lib/inject');
 var balance     = require('./lib/balance');
-var middleware  = require('./lib/middleware');
-var locals      = require('./lib/locals');
-var flash       = require('./lib/flash');
-var mongoose    = require('./lib/mongoose');
-var redis       = require('./lib/redis');
-var reload      = require('./lib/reload')();
-var emailer       = require('./lib/emailer');
+// var middleware  = require('./lib/middleware');
+// var locals      = require('./lib/locals');
+// var flash       = require('./lib/flash');
+// var mongoose    = require('./lib/mongoose');
+// var redis       = require('./lib/redis');
+// var reload      = require('./lib/reload')();
+// var emailer       = require('./lib/emailer');
 
 // Require our components
-
-var user        = require('./components/user');
 var dashboard   = require('./components/dashboard');
 var errors      = require('./components/errors');
 
@@ -39,18 +37,17 @@ function createApp(config) {
   var app = express();
   app.config = app.locals.config = config;
 
-  // libs
-  mongoose(app, config);
-  redis(app);
-  inject(app);
-  middleware(app);
-  locals(app);
-  flash(app);
-  emailer(app);
-  reload();
+  // // libs
+  // mongoose(app, config);
+  // redis(app);
+  // inject(app);
+  // middleware(app);
+  // locals(app);
+  // flash(app);
+  // emailer(app);
+  // reload();
 
   // components
-  user(app, config);
   dashboard(app, config);
   errors(app, config);
 
@@ -59,6 +56,9 @@ function createApp(config) {
 
 function startApp() {
   var app = createApp(config);
+  app.engine('.html', require('ejs').__express);
+  app.set('views', __dirname + '/views');
+  app.set('view engine', 'html');
   app.listen(config.port);
   console.log("Listening on", config.port);
 }
